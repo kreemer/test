@@ -21,3 +21,28 @@ module "hub_and_spoke_vnet" {
   enable_telemetry     = var.enable_telemetry
 }
 
+
+module "bastion_host" {
+  source = "git::https://github.com/Azure/terraform-azurerm-avm-res-network-bastionhost.git?ref=f1b6ad41fcc2aea5b36fc10d8f2a453c858c6e1c"
+
+  for_each = local.bastion_hosts
+
+  name                   = try(each.value.name, "snap-bastion-${each.key}")
+  resource_group_name    = each.value.resource_group_name
+  location               = each.value.location
+  copy_paste_enabled     = try(each.value.copy_paste_enabled, false)
+  diagnostic_settings    = try(each.value.diagnostic_settings, null)
+  enable_telemetry       = var.enable_telemetry
+  file_copy_enabled      = try(each.value.file_copy_enabled, false)
+  ip_configuration       = each.value.ip_configuration
+  ip_connect_enabled     = try(each.value.ip_connect_enabled, false)
+  kerberos_enabled       = try(each.value.kerberos_enabled, false)
+  lock                   = try(each.value.lock, null)
+  role_assignments       = try(each.value.role_assignments, {})
+  scale_units            = try(each.value.scale_units, 2)
+  shareable_link_enabled = try(each.value.shareable_link_enabled, false)
+  sku                    = try(each.value.sku, "Standard")
+  tags                   = try(each.value.tags, var.tags)
+  tunneling_enabled      = try(each.value.tunneling_enabled, false)
+  virtual_network_id     = try(each.value.virtual_network_id, null)
+}
