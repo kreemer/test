@@ -23,7 +23,7 @@ module "hub_and_spoke_vnet" {
 
 
 module "bastion_host" {
-  source = "git::https://github.com/Azure/terraform-azurerm-avm-res-network-bastionhost.git?ref=f1b6ad41fcc2aea5b36fc10d8f2a453c858c6e1c"
+  source = "git::https://github.com/Azure/terraform-azurerm-avm-res-network-bastionhost.git?ref=7c7d294caf81377671b99687aa75726e1072002e" # v0.9.0
 
   for_each = local.bastion_hosts
 
