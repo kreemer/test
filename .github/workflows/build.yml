@@ -1,0 +1,38 @@
+name: Build Container
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  integration-tests:
+    name: Test
+    runs-on: macos-latest
+    steps:
+      - name: Install container runtime
+        run: |
+          brew install container
+          brew services start container
+          # Wait until the API server is accepting connections (up to 30 s).
+          for i in $(seq 1 30); do
+            container system status > /dev/null 2>&1 && break
+            sleep 1
+          done
+          container system status
+          # Download and install the recommended kernel (required for image builds).
+          container system kernel set --recommended
+
+      - name: Test Container
+        run: |
+          container ls
+
+      - name: Test Container2
+        run: |
+          container run --rm -d ubuntu
+
+      - name: Test Container3
+        run: |
+          container ls
+
